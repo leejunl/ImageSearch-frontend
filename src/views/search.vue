@@ -60,13 +60,12 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+
 import { genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import axios from 'axios';
 import * as echarts from 'echarts';
-const router = useRouter()
-const route = useRoute()
+
 const uploadRef = ref<UploadInstance>()
 const file = ref();
 const images = reactive<any>([]);

@@ -5,18 +5,13 @@ const routes = [
     {
         path: "/",
         name: "Home",
-        redirect: '/search',
+        redirect: '/info',
     },
     {
         path: "/info",
         name: "info",
         component: () => import("../views/index.vue"),
-    },
-    {
-        path: "/search",
-        name: "search",
-        component: () => import("../views/search.vue"),
-    },
+    }
 ];
 const router = createRouter({
     history: createWebHistory(),
