@@ -33,7 +33,7 @@ const loading = ref(false)
 const onSubmit = () => {
     const formData = new FormData();
     formData.append('word', form.word)
-    formData.append('url', form.url.split('word=')[0])
+    formData.append('url', form.url.split('word=')[0].toString + 'word=')
     formData.append('cookies', form.cookies)
     if (form.word == '') {
         ElMessage.error('关键字不能为空！')
