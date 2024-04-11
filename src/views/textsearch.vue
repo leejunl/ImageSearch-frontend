@@ -62,7 +62,8 @@ const form = reactive({
     word: '',
     url: '',
     cookies: '',
-    code: 1
+    code: 1,
+    istext: 'yes'
 })
 
 const oninit = () => {
@@ -77,6 +78,7 @@ const onSubmit = () => {
     formData.append('word', form.word)
     formData.append('url', form.url.split('word=')[0])
     formData.append('cookies', form.cookies)
+    formData.append('istext',form.istext )
     if (form.word == '') {
         ElMessage.error('关键字不能为空！')
     } else {
