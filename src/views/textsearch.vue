@@ -11,8 +11,8 @@
                         <el-form-item label="搜索关键字">
                             <el-input v-model="form.word" />
                         </el-form-item>
-                        <el-button type="primary" @click="onSubmit"
-                            style="margin: auto;width: 48%;margin: 1%;">开始搜索</el-button>
+                        <el-button type="primary" @click="onSubmit" style="margin: auto;width: 48%;margin: 1%;"
+                            v-loading.fullscreen.lock="loading" element-loading-text="正在全力加载中 ...">开始搜索</el-button>
                         <el-button type="primary" @click="oninit"
                             style="margin: auto;width: 48%;margin: 1%;">清空重置</el-button>
                     </el-form>
@@ -31,11 +31,9 @@
                             <el-col v-for="image in images" :key="image.filename" :span="4">
                                 <el-card :body-style="{ padding: '0' }" class="image-card">
                                     <div class="image-container">
-                                        <img :src="'data:image/jpeg;base64,' + image.source" :alt="image.title"
-                                            class="image-item">
+                                        <img :src="image.source" :alt="image.title" class="image-item">
                                     </div>
                                     <div class="text item">{{ image.title }}</div>
-                                    <div class="text item">相似度：{{ image.score }}</div>
                                 </el-card>
                             </el-col>
                         </el-row>
@@ -78,7 +76,7 @@ const onSubmit = () => {
     formData.append('word', form.word)
     formData.append('url', form.url.split('word=')[0])
     formData.append('cookies', form.cookies)
-    formData.append('istext',form.istext )
+    formData.append('istext', form.istext)
     if (form.word == '') {
         ElMessage.error('关键字不能为空！')
     } else {
@@ -94,18 +92,35 @@ const onSubmit = () => {
             data: formData,
             headers
         }).then(result => {
-            if (result.data.code === 500) {
-                form.code = 500
-                ElMessage.error('身份过期')
-            } else if (result.data.code === 200) {
+            if (result.data.code === 200) {
                 form.code = 200
-                ElMessage.error('搜索成功')
-                
+                images.value = []
+                tempdatas.names = []
+                tempdatas.score = []
+                for (let i in result.data.data.data) {
+                    console.log()
+                    images.push({
+                        title: result.data.data.data[i].filename,
+                        link: '#',
+                        source: result.data.data.data[i].source,
+                        score: ''
+                    })
+                    tempdatas.names.push(result.data.data.data[i].filename)
+
+                }
+
+                ElMessage.success('搜索成功')
+                loading.value = false
+            } else if (result.data.code === 500) {
+                ElMessage.error('搜索失败！当前网络波动大')
+                loading.value = false
             }
-            loading.value = false
         }).catch(error => {
             if (error.response && error.response.status === 403) {
                 ElMessage.error('请求被拒绝，请检查您的访问权限！')
+            } else if (error.response.status === 500) {
+                form.code = 500
+                ElMessage.error('身份过期')
             } else {
                 ElMessage.error('发生了未知错误，请稍后重试！')
             }

@@ -1,20 +1,35 @@
-<template>
-    <el-card style="margin: 2%;display: flex;justify-content: center;align-items: center">
-        <el-form :model="form" label-width="auto" style="width: 600px">
-            <el-form-item label="爬取关键字">
-                <el-input v-model="form.word" />
-            </el-form-item>
-            <el-form-item label="URL" v-show="form.code == 500">
-                <el-input v-model="form.url" />
-            </el-form-item>
-            <el-form-item label="COOKIES" v-show="form.code == 500">
-                <el-input v-model="form.cookies" type="textarea" />
-            </el-form-item>
-            <el-button type="primary" class="ml-3" @click="onSubmit" v-loading.fullscreen.lock="loading"
-                element-loading-text="正在全力加载中 ..." style="margin: auto;width: 48%;margin: 1%;">开始爬取</el-button>
+<style scoped>
+.titles {
+    font-size: 17px;
+    color: #111;
+    text-align: left;
+    font-weight: bold;
 
-            <el-button type="primary" @click="oninit" style="margin: auto;width: 48%;margin: 1%;">清空重置</el-button>
-        </el-form>
+}
+</style>
+
+<template>
+    <el-card style="margin: 2%;">
+        <div class="titles">
+            数据爬取
+        </div>
+        <div style="display: flex;justify-content: center;align-items: center;">
+            <el-form :model="form" label-width="auto" style="width: 600px">
+                <el-form-item label="爬取关键字">
+                    <el-input v-model="form.word" />
+                </el-form-item>
+                <el-form-item label="URL" v-show="form.code == 500">
+                    <el-input v-model="form.url" />
+                </el-form-item>
+                <el-form-item label="COOKIES" v-show="form.code == 500">
+                    <el-input v-model="form.cookies" type="textarea" />
+                </el-form-item>
+                <el-button type="primary" class="ml-3" @click="onSubmit" v-loading.fullscreen.lock="loading"
+                    element-loading-text="正在全力加载中 ..." style="margin: auto;width: 48%;margin: 1%;">开始爬取</el-button>
+
+                <el-button type="primary" @click="oninit" style="margin: auto;width: 48%;margin: 1%;">清空重置</el-button>
+            </el-form>
+        </div>
     </el-card>
 </template>
 
@@ -37,7 +52,7 @@ const onSubmit = () => {
     formData.append('word', form.word)
     formData.append('url', form.url.split('word=')[0] + 'word=')
     formData.append('cookies', form.cookies)
-    formData.append('istext',form.istext )
+    formData.append('istext', form.istext)
     if (form.word == '') {
         ElMessage.error('关键字不能为空！')
     } else {
@@ -57,8 +72,11 @@ const onSubmit = () => {
             if (result.data.code === 200) {
                 form.code = 200
                 ElMessage.success('爬取成功')
+                loading.value = false
+            } else if (result.data.code === 500) {
+                ElMessage.error('爬取失败！当前网络波动大')
+                loading.value = false
             }
-            loading.value = false
         }).catch(error => {
             if (error.response && error.response.status === 403) {
                 ElMessage.error('请求被拒绝，请检查您的访问权限！')

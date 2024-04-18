@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 
-import { genFileId } from 'element-plus'
+import { ElMessage, genFileId } from 'element-plus'
 import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import axios from 'axios';
 import * as echarts from 'echarts';
@@ -134,6 +134,7 @@ const submitUpload = () => {
       tempdatas.score.push(result.data.data[i].score * 100)
     }
     loading.value = false
+    ElMessage.success('搜索成功！')
   }).finally(
     createEcharts
   );
