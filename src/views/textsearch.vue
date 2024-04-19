@@ -94,7 +94,7 @@ const onSubmit = () => {
         }).then(result => {
             if (result.data.code === 200) {
                 form.code = 200
-                images.value = []
+                images.splice(0)
                 tempdatas.names = []
                 tempdatas.score = []
                 for (let i in result.data.data.data) {
