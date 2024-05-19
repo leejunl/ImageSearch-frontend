@@ -31,7 +31,7 @@
                             <el-col v-for="image in images" :key="image.filename" :span="4">
                                 <el-card :body-style="{ padding: '0' }" class="image-card">
                                     <div class="image-container">
-                                        <img :src="image.source" :alt="image.title" class="image-item">
+                                        <img :src="image.source" :alt="image.title" class="image-item" referrerPolicy="no-referrer">
                                     </div>
                                     <div class="text item">{{ image.title }}</div>
                                 </el-card>
